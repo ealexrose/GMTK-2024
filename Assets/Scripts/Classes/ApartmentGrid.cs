@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ApartmentGrid
 {
+
+    public bool debugMessages;
     public ApartmentBlock[,] grid;
 
     public ApartmentGrid(int xSize, int ySize) 
@@ -12,12 +14,26 @@ public class ApartmentGrid
         grid = new ApartmentBlock[xSize,ySize];
     }
 
+
+    public bool IsApartmentPositionBlocked(Vector2Int gridPosition, Apartment apartment) 
+    {
+        foreach (ApartmentBlock apartmentBlock in apartment.apartmentBlocks) 
+        {
+            int x = gridPosition.x + apartmentBlock.localGridPosition.x;
+            int y = gridPosition.y + apartmentBlock.localGridPosition.y;
+
+            if (IsGridCellBlocked(new Vector2Int(x, y), apartment))
+                return true;
+        }
+        return false;
+    }
+
     public bool IsGridCellBlocked(Vector2Int coordinate, Apartment exclusion = null) 
     {
         if (coordinate.x < 0 || coordinate.x >= grid.GetLength(0) || coordinate.y < 0 || coordinate.y >= grid.GetLength(1))
         {
             Debug.LogWarning("Out of bounds!");
-            return false;
+            return true;
         }
 
         var apartmentBlockAtCoordinates = grid[coordinate.x,coordinate.y];
@@ -57,8 +73,8 @@ public class ApartmentGrid
                 Debug.LogWarning("A block has displaced another block while attempting to move.");
 
             grid[x, y] = null;
-
-            Debug.Log($"Moved an apartment block from ({x},{y})");
+            if(debugMessages)
+                Debug.Log($"Moved an apartment block from ({x},{y})");
         }
 
         foreach (ApartmentBlock apartmentBlock in apartment.apartmentBlocks)
@@ -70,10 +86,31 @@ public class ApartmentGrid
 
             grid[x, y] = apartmentBlock;
             apartmentBlock.gridPosition = new Vector2Int(x, y);
-
-            Debug.Log($"Moved an apartment block to ({x},{y})");
+            if (debugMessages)
+                Debug.Log($"Moved an apartment block to ({x},{y})");
         }
 
         apartment.gridPosition = newPosition;
+    }
+
+    internal Apartment GetApartmentAtPosition(Vector2Int gridPosition)
+    {
+        int x = gridPosition.x;
+        int y = gridPosition.y;
+        return grid[x, y]?.parentApartment;
+    }
+
+    internal bool IsGridPositionOpenForResident(Vector2Int gridPosition, Resident resident)
+    {
+        int x = gridPosition.x;
+        int y = gridPosition.y;
+        ApartmentBlock blockAtPosition = grid[x, y];
+        if (blockAtPosition != null && !blockAtPosition.parentApartment.IsInPlacementZone)
+            return false;
+
+        if (blockAtPosition == null || !blockAtPosition.parentApartment.Occupied || blockAtPosition.parentApartment.resident == resident)
+            return true;
+        Debug.Log(blockAtPosition.parentApartment.Occupied);
+        return false;
     }
 }

@@ -10,4 +10,9 @@ public class Apartment
     public List<ApartmentBlock> apartmentBlocks;
     [HideInInspector]
     public Vector2Int gridPosition;
+    
+    [HideInInspector]
+    public bool Occupied { get { return resident.name != null && resident.name != ""; } }
+    public bool IsInPlacementZone;
+    public Resident resident;
 }
