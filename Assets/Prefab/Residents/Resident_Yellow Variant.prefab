@@ -11,7 +11,11 @@ PrefabInstance:
     - target: {fileID: 2764687547983755311, guid: ed56418423c6b74479b0e2a4af7c2ee0, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 765d01c4f0b970a45889d980efade618, type: 3}
+      objectReference: {fileID: 95140499, guid: 1e5444fe9228e8748a7d8612369a3753, type: 3}
+    - target: {fileID: 4549925547658063621, guid: ed56418423c6b74479b0e2a4af7c2ee0, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: d4711250932347d4a9bf7637a8d72f8c, type: 2}
     - target: {fileID: 5006800566906277382, guid: ed56418423c6b74479b0e2a4af7c2ee0, type: 3}
       propertyPath: m_Name
       value: Resident_Yellow Variant
