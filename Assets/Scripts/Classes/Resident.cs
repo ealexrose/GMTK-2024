@@ -21,4 +21,6 @@ public class Resident
 
     public ResidentType residentType;
     public Vector2Int gridCoordinates;
+    public int colorNumber;
+    public int moneyMultiplier;
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ApartmentGrid
@@ -91,6 +92,67 @@ public class ApartmentGrid
         }
 
         apartment.gridPosition = newPosition;
+    }
+
+    internal bool AllApartmentBlocksTouching()
+    {
+        List<Apartment> visitedApartments = new List<Apartment>();
+        List<Apartment> edgeApartments = new List<Apartment>();
+        edgeApartments.Add(BuildingManager.instance.apartmentControllers[0].apartment);
+        visitedApartments.Add(BuildingManager.instance.apartmentControllers[0].apartment);
+        while (edgeApartments.Count > 0) 
+        {
+            List<Apartment> neighbors = GetAllNeighboringApartments(edgeApartments[0]);
+            List<Apartment> unvisitedNeighbors = neighbors.Where(apt => !visitedApartments.Contains(apt)).ToList();
+            edgeApartments.AddRange(unvisitedNeighbors);
+            visitedApartments.AddRange(unvisitedNeighbors);
+            edgeApartments.RemoveAt(0);
+        }
+        return visitedApartments.Count == BuildingManager.instance.apartmentControllers.Count();
+    }
+
+    internal List<Apartment> GetAllNeighboringApartments(Apartment apartment)
+    {
+        List<Apartment> neighbors = new List<Apartment>();
+        foreach(ApartmentBlock apartmentBlock in apartment.apartmentBlocks) 
+        {
+            int x = apartmentBlock.gridPosition.x;
+            int y = apartmentBlock.gridPosition.y;
+            Vector2Int northCoordinates = new Vector2Int(x, y + 1);
+            Vector2Int eastCoordinates = new Vector2Int(x + 1, y);
+            Vector2Int southCoordinates = new Vector2Int(x, y - 1);
+            Vector2Int westCoordinates = new Vector2Int(x - 1, y);
+            Apartment apartmentBeingExamined;
+            //Check North
+            if (PlacementAreaManager.instance.IsInPlacementBounds(northCoordinates)) 
+            {
+                apartmentBeingExamined = GetApartmentAtPosition(northCoordinates);
+                if (apartmentBeingExamined != null && !neighbors.Contains(apartmentBeingExamined))
+                    neighbors.Add(apartmentBeingExamined);
+            }
+            //Check East
+            if (PlacementAreaManager.instance.IsInPlacementBounds(eastCoordinates))
+            {
+                apartmentBeingExamined = GetApartmentAtPosition(eastCoordinates);
+                if (apartmentBeingExamined != null && !neighbors.Contains(apartmentBeingExamined))
+                    neighbors.Add(apartmentBeingExamined);
+            }
+            //Check South
+            if (PlacementAreaManager.instance.IsInPlacementBounds(southCoordinates))
+            {
+                apartmentBeingExamined = GetApartmentAtPosition(southCoordinates);
+                if (apartmentBeingExamined != null && !neighbors.Contains(apartmentBeingExamined))
+                    neighbors.Add(apartmentBeingExamined);
+            }
+            //Check West
+            if (PlacementAreaManager.instance.IsInPlacementBounds(westCoordinates))
+            {
+                apartmentBeingExamined = GetApartmentAtPosition(westCoordinates);
+                if (apartmentBeingExamined != null && !neighbors.Contains(apartmentBeingExamined))
+                    neighbors.Add(apartmentBeingExamined);
+            }
+        }
+        return neighbors;
     }
 
     internal Apartment GetApartmentAtPosition(Vector2Int gridPosition)

@@ -199,6 +199,7 @@ MonoBehaviour:
       rid: -2
     residentType: 0
     gridCoordinates: {x: 0, y: 0}
+    colorNumber: 0
   residentState: 0
   sprites:
   - {fileID: 2764687547983755311}

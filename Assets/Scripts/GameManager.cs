@@ -7,7 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public enum GameState
     {
-        Placing,
+        PlacingApartments,
+        PlacingResidents,
         ReadyToStartNextRound
     }
     public GameState gameState;
@@ -18,7 +19,8 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            gameState = GameState.Placing;
+            gameState = GameState.PlacingApartments;
+            StartRound();
         }
         else
         {
@@ -32,25 +34,38 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump"))
         {
-            if (gameState == GameState.Placing)
+            if (gameState == GameState.PlacingApartments)
             {
-                if (ResidentManager.instance.AllResidentsAreInBuildings() && BuildingManager.instance.AreApartmentsAllPlacedInValidPositions())
+                if (!BuildingManager.instance.AllApartmentsPlacedInZone())
                 {
-                    EndRound();
+                    WarningManager.instance.PlaceAllApartmentsWarning();
+                }
+                else if (!BuildingManager.instance.apartmentGrid.AllApartmentBlocksTouching())
+                {
+                    WarningManager.instance.AllApartmentTouchingWarning();
+                }
+                else if (!BuildingManager.instance.ApartmentIsOnTheGround())
+                {
+                    WarningManager.instance.ApartmentTouchingGroundWarning();
                 }
                 else
                 {
-                    Debug.Log($"Cannot lock in apartments and residents because Residents are {ResidentManager.instance.AllResidentsAreInBuildings()} and Apartments are {BuildingManager.instance.AreApartmentsAllPlacedInValidPositions()}");
+                    EndApartmentPhase();
                 }
             }
-            else if (gameState == GameState.ReadyToStartNextRound) 
+            else if (gameState == GameState.ReadyToStartNextRound)
             {
-                BuildingManager.instance.SpawnApartments(8);
-                ResidentManager.instance.SpawnResidents(8);
-                gameState = GameState.Placing;
+                StartRound();
             }
 
         }
+    }
+
+    public void EndApartmentPhase() 
+    {
+        BuildingManager.instance.LockAllBuildingsInPlace();
+        ResidentManager.instance.UnlockResidents();
+        gameState = GameState.PlacingResidents;
     }
 
     private void EndRound()
@@ -58,5 +73,11 @@ public class GameManager : MonoBehaviour
         BuildingManager.instance.LockAllBuildingsInPlace();
         ResidentManager.instance.LockAllResidentsInPlace();
         gameState = GameState.ReadyToStartNextRound;
+    }
+    private void StartRound()
+    {
+        BuildingManager.instance.SpawnApartments(5);
+        ResidentManager.instance.SpawnResidents(5);
+        gameState = GameState.PlacingApartments;
     }
 }

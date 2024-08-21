@@ -123,7 +123,7 @@ public class ApartmentController : MonoBehaviour, IClickable
         }
         else
         {
-            MoveApartment(LocalGridPosition);
+            MoveApartment(GridPosition);
         }
         PlaceBehind();
     }
@@ -132,35 +132,46 @@ public class ApartmentController : MonoBehaviour, IClickable
 
     private bool CheckIfPositionIsValid()
     {
-        return BuildingManager.instance.CheckIfTargetApartmentPositionIsValid(LocalGridPosition, apartment);
+        return BuildingManager.instance.CheckIfTargetApartmentPositionIsValid(GridPosition, apartment);
     }
 
     #region visuals
-    public List<SpriteRenderer> sprites;
-
+    public SpriteRenderer background;
+    public SpriteRenderer border;
     public void MarkAsInvalid()
     {
-        sprites.ForEach(x => x.color = Color.red);
+        background.color = ColorLibrary.instance.ApartmentBackgroundColorError;
+        border.color = ColorLibrary.instance.ApartmentBorderColorError;
     }
 
     public void MarkAsValid()
     {
-        sprites.ForEach(x => x.color = Color.white);
+        background.color = ColorLibrary.instance.ApartmentBackgroundColor;
+        border.color = ColorLibrary.instance.ApartmentBorderColor;
     }
 
     public void MarkAsPartiallyValid()
     {
-        sprites.ForEach(x => x.color = Color.gray);
+        background.color = ColorLibrary.instance.ApartmentBackgroundColorWarning;
+        border.color = ColorLibrary.instance.ApartmentBackgroundColorWarning;
+    }
+
+    public void MarkAsResidentColor(int residentColor) 
+    {
+        background.color = ColorLibrary.instance.residentColors[residentColor];
+        border.color = ColorLibrary.instance.ApartmentBorderColor;
     }
 
     public void PlaceInFront()
     {
-        sprites.ForEach(x => x.sortingOrder = 5);
+        background.sortingOrder = 5;
+        border.sortingOrder = 10;
     }
 
     public void PlaceBehind()
     {
-        sprites.ForEach(x => x.sortingOrder = 1);
+        background.sortingOrder = 1;
+        border.sortingOrder = 5;
     }
 
     #endregion
@@ -216,6 +227,6 @@ public class ApartmentController : MonoBehaviour, IClickable
         throw new NotImplementedException();
     }
 
-    private Vector2Int LocalGridPosition { get { return new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)); } }
-    public bool ApartmentInZone { get { return PlacementAreaManager.instance.IsFootprintInBounds(LocalGridPosition, apartment.footPrint); } }
+    public Vector2Int GridPosition { get { return new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)); } }
+    public bool ApartmentInZone { get { return PlacementAreaManager.instance.IsFootprintInBounds(GridPosition, apartment.footPrint); } }
 }

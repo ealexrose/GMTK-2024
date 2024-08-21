@@ -11,6 +11,7 @@ public class ResidentController : MonoBehaviour, IClickable
     public Resident resident;
     public enum ResidentState
     {
+        WaitingForUnlock,
         WaitingToMove,
         FollowingMouse,
         LockedIn,
@@ -20,7 +21,8 @@ public class ResidentController : MonoBehaviour, IClickable
     // Start is called before the first frame update
     void Start()
     {
-        residentState = ResidentState.WaitingToMove;
+        residentState = ResidentState.WaitingForUnlock;
+        MarkAsInvalid();
         resident.gridCoordinates = LocalGridPosition;
         ResidentManager.instance.RegisterResident(this);
     }
@@ -36,7 +38,7 @@ public class ResidentController : MonoBehaviour, IClickable
 
             if (targetPositionIsValid)
             {
-                MarkAsValid();
+                MarkAsWaiting();
             }
             else
             {
@@ -53,14 +55,6 @@ public class ResidentController : MonoBehaviour, IClickable
     internal void LockIn()
     {
         residentState = ResidentState.LockedIn;
-    }
-
-    private bool CheckForClickedOnObject()
-    {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
-        RaycastHit2D[] hit = Physics2D.RaycastAll(mousePos2D, Vector2.zero);
-        return hit.Any(h => h.collider.transform.IsChildOf(this.transform));
     }
 
     #region Dragging
@@ -91,31 +85,45 @@ public class ResidentController : MonoBehaviour, IClickable
         if (!targetPositionIsValid)
         {
             transform.position = originalGridPosition;
+            MarkAsValid();
         }
         else
         {
             Apartment apartmentAtPosition = BuildingManager.instance.GetApartmentAtPosition(LocalGridPosition);
-            if (resident.homeApartment != null && apartmentAtPosition != resident.homeApartment)
+            if (resident.homeApartment != null && apartmentAtPosition != resident.homeApartment) 
+            {
                 MoveResidentOut();
+                MarkAsWaiting();
+            }
+
             if (apartmentAtPosition != null)
             {
                 MoveResidentIn(apartmentAtPosition);
+                MarkAsValid();
             }
             resident.gridCoordinates = LocalGridPosition;
         }
-        MarkAsValid();
+
         PlaceBehind();
         Debug.Log("All Residents in Apartments? " + ResidentManager.instance.AllResidentsAreInBuildings());
+    }
+
+    internal void Unlock()
+    {
+        residentState = ResidentState.WaitingToMove;
+        MarkAsValid();
     }
 
     private void MoveResidentIn(Apartment apartmentAtPosition)
     {
         apartmentAtPosition.resident = resident;
         resident.homeApartment = apartmentAtPosition;
+        BuildingManager.instance.apartmentControllers.Find(ac => ac.apartment == apartmentAtPosition).MarkAsResidentColor(resident.colorNumber);
     }
 
     private void MoveResidentOut()
     {
+        BuildingManager.instance.apartmentControllers.Find(ac => ac.apartment == resident.homeApartment).MarkAsValid();
         resident.homeApartment.resident = new Resident();
         resident.homeApartment = null;
     }
@@ -125,24 +133,29 @@ public class ResidentController : MonoBehaviour, IClickable
     #region visuals
     public List<SpriteRenderer> sprites;
 
+    public void MarkAsWaiting() 
+    {
+        sprites.ForEach(x => x.color = ColorLibrary.instance.residentUnlockedColor);
+    }
+
     public void MarkAsInvalid()
     {
-        sprites.ForEach(x => x.color = Color.gray);
+        sprites.ForEach(x => x.color = ColorLibrary.instance.residentLockedColor);
     }
 
     public void MarkAsValid()
     {
-        sprites.ForEach(x => x.color = Color.white);
+        sprites.ForEach(x => x.color = ColorLibrary.instance.residentInApartmentColor);
     }
 
     public void PlaceInFront()
     {
-        sprites.ForEach(x => x.sortingOrder = 10);
+        sprites.ForEach(x => x.sortingOrder = 15);
     }
 
     public void PlaceBehind()
     {
-        sprites.ForEach(x => x.sortingOrder = 6);
+        sprites.ForEach(x => x.sortingOrder = 3);
     }
     #endregion
 
@@ -154,6 +167,11 @@ public class ResidentController : MonoBehaviour, IClickable
     }
     public bool IsValidClickable()
     {
+        if (GameManager.instance.gameState == GameManager.GameState.PlacingApartments)
+        {
+            WarningManager.instance.PlaceAllApartmentsWarning();
+        }
+
         if (residentState != ResidentState.WaitingToMove)
             return false;
 

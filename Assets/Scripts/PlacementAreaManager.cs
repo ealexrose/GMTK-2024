@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlacementAreaManager : MonoBehaviour
 {
     public Vector2Int dimensions;
-    private Vector2Int localOrigin { get {return  new Vector2Int(Mathf.FloorToInt(transform.position.x),Mathf.FloorToInt( transform.position.y)); } }
+    public Vector2Int localOrigin { get {return  new Vector2Int(Mathf.FloorToInt(transform.position.x),Mathf.FloorToInt( transform.position.y)); } }
 
     public static PlacementAreaManager instance;
     public void Awake()

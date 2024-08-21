@@ -67,6 +67,11 @@ public class ResidentManager : MonoBehaviour
         return residentPrefabs[0];
     }
 
+    internal void UnlockResidents()
+    {
+        residentControllers.Where(res => res.residentState == ResidentController.ResidentState.WaitingForUnlock).ToList().ForEach(res => res.Unlock());
+    }
+
     private List<ResidentSpawnable> GetRandomResidents(int spawnCount) 
     {
         List<ResidentSpawnable> spawnables = new List<ResidentSpawnable>();

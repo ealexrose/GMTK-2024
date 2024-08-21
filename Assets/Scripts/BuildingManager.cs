@@ -10,7 +10,8 @@ public class BuildingManager : MonoBehaviour
     public List<ApartmentController> apartmentControllers;
     public ApartmentGrid apartmentGrid;
 
-
+    public int rowsPerPriceIncrease;
+    public int basePrice;
     public static BuildingManager instance;
     // Start is called before the first frame update
     void Awake()
@@ -32,7 +33,7 @@ public class BuildingManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        Debug.Log(GetApartmentPrice());
     }
 
 
@@ -69,6 +70,11 @@ public class BuildingManager : MonoBehaviour
 
     internal bool AreApartmentsAllPlacedInValidPositions()
     {
+        return AllApartmentsPlacedInZone() && ApartmentIsOnTheGround() && apartmentGrid.AllApartmentBlocksTouching();
+    }
+
+    public bool AllApartmentsPlacedInZone() 
+    {
         foreach (ApartmentController apartmentManager in apartmentControllers)
         {
             //We can assume any previously placed apartments are still valid
@@ -90,6 +96,16 @@ public class BuildingManager : MonoBehaviour
         return true;
     }
 
+    public bool ApartmentIsOnTheGround()
+    {
+        return apartmentControllers.Any(ac => ac.apartment.apartmentBlocks.Any(ab => ab.gridPosition.y == 2));
+    }
+
+    public bool AllApartmentBlocksTouching()
+    {
+        return apartmentGrid.AllApartmentBlocksTouching();
+    }
+
     internal bool CheckIfTargetResidentPositionIsValid(Vector2Int gridPosition, Resident resident)
     {
         return apartmentGrid.IsGridPositionOpenForResident(gridPosition, resident);
@@ -98,6 +114,24 @@ public class BuildingManager : MonoBehaviour
     internal Apartment GetApartmentAtPosition(Vector2Int gridPosition)
     {
         return apartmentGrid.GetApartmentAtPosition(gridPosition);
+    }
+
+    internal int GetApartmentPrice() 
+    {
+        int x = PlacementAreaManager.instance.localOrigin.x;
+        int y = PlacementAreaManager.instance.localOrigin.y;
+        int priceTotal = 0;
+        foreach (ApartmentController apartmentController in apartmentControllers) 
+        {
+            if (apartmentController.ApartmentInZone) 
+            {
+                if(apartmentController.apartmentState  != ApartmentController.ApartmentState.FollowingMouse)
+                    apartmentController.apartment.apartmentBlocks.ForEach(block => priceTotal += basePrice * (int)MathF.Ceiling((float)(block.gridPosition.y - y + 1) / (float)rowsPerPriceIncrease));
+                if(apartmentController.apartmentState == ApartmentController.ApartmentState.FollowingMouse)
+                    apartmentController.apartment.apartmentBlocks.ForEach(block => priceTotal += basePrice * (int)MathF.Ceiling((float)(apartmentController.GridPosition.y + block.localGridPosition.y - y + 1) / (float)rowsPerPriceIncrease));
+            }
+        }
+        return priceTotal;
     }
 
     #endregion
