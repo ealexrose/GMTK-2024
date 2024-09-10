@@ -91,6 +91,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3562334652802827099}
+  - component: {fileID: 2235421569423621607}
   m_Layer: 0
   m_Name: VisualsContainer
   m_TagString: Untagged
@@ -114,6 +115,21 @@ Transform:
   - {fileID: 3112890029485199515}
   m_Father: {fileID: 4362426874994069592}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2235421569423621607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782351695014766822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56d1cf3491f6b7c4b8fac4734b60287f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  residentController: {fileID: 8798653884563629100}
+  animator: {fileID: 4549925547658063621}
+  residentAnimationState: 0
 --- !u!1 &1861794707587925336
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,9 +213,11 @@ MonoBehaviour:
     name: Default_Resident
     homeApartment:
       rid: -2
-    residentType: 0
+    residentType: 1
+    residentMood: 0
     gridCoordinates: {x: 0, y: 0}
     colorNumber: 0
+    moneyMultiplier: 2
   residentState: 0
   sprites:
   - {fileID: 2764687547983755311}

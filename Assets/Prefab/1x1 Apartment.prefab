@@ -387,8 +387,10 @@ MonoBehaviour:
       homeApartment:
         rid: -2
       residentType: 0
+      residentMood: 0
       gridCoordinates: {x: 0, y: 0}
       colorNumber: 0
+      moneyMultiplier: 0
   apartmentState: 0
   background: {fileID: 3763349100923928282}
   border: {fileID: 4428137941842034261}

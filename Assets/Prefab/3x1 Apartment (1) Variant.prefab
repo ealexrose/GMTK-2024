@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &5564105557410646347
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1357571001791109099, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357571001791109099, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357571001791109099, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357571001791109099, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357571001791109099, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357571001791109099, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357571001791109099, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357571001791109099, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357571001791109099, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357571001791109099, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2896679234073351256, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3075699711632375243, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3763349100923928282, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 25f2b27fb8a6d8b4680b8abb38e2ef4c, type: 3}
+    - target: {fileID: 3763349100923928282, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4428137941842034261, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 99c2cfbef2859114ca1d739c8257159c, type: 3}
+    - target: {fileID: 4953760842584062358, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: apartment.footPrint.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4953760842584062358, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: apartment.apartmentBlocks.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4953760842584062358, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: apartment.apartmentBlocks.Array.data[1].parentApartment
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4953760842584062358, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: apartment.apartmentBlocks.Array.data[2].parentApartment
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4953760842584062358, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: apartment.apartmentBlocks.Array.data[1].localGridPosition.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4953760842584062358, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: apartment.apartmentBlocks.Array.data[2].localGridPosition.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5683089691924979648, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_Size.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6744102336692118375, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
+      propertyPath: m_Name
+      value: 3x1 Apartment (1) Variant
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}

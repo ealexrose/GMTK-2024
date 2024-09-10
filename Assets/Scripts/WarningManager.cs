@@ -67,4 +67,9 @@ public class WarningManager : MonoBehaviour
     {
         FlashWarning("Must place all apartments first!!!", 2f, 0.2f);
     }
+
+    internal void FlashGenericWarning(string warning) 
+    {
+        FlashWarning(warning, 2f, 0.2f);
+    }
 }

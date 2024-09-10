@@ -310,6 +310,7 @@ GameObject:
   - component: {fileID: 178669183}
   - component: {fileID: 178669182}
   - component: {fileID: 178669181}
+  - component: {fileID: 178669184}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -380,7 +381,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 178669182}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 178669184}
+        m_TargetAssemblyTypeName: AcceptButtonController, Assembly-CSharp
+        m_MethodName: ProgressRound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &178669182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -419,6 +432,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 178669179}
   m_CullTransparentMesh: 1
+--- !u!114 &178669184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 178669179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b551cdb4dd6cc5947871b1f6af9a700a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &223818049
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,6 +542,7 @@ MonoBehaviour:
       homeApartment:
         rid: -2
       residentType: 0
+      residentMood: 0
       gridCoordinates: {x: 0, y: 0}
       colorNumber: 0
       moneyMultiplier: 0
@@ -1023,6 +1049,7 @@ MonoBehaviour:
       homeApartment:
         rid: -2
       residentType: 0
+      residentMood: 0
       gridCoordinates: {x: 0, y: 0}
       colorNumber: 0
       moneyMultiplier: 0
@@ -2363,6 +2390,7 @@ MonoBehaviour:
       homeApartment:
         rid: -2
       residentType: 0
+      residentMood: 0
       gridCoordinates: {x: 0, y: 0}
       colorNumber: 0
       moneyMultiplier: 0
@@ -3062,11 +3090,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   apartmentControllers: []
-  rowsPerPriceIncrease: 10
-  basePrice: 5
+  rowsPerPriceIncrease: 3
+  basePrice: 500
   apartmentPrefabs:
   - apartment: {fileID: 6744102336692118375, guid: 9fce2ba9186a06a44a1ec247a72ad2da, type: 3}
     spawnWeight: 50
+  - apartment: {fileID: 4807965905161908383, guid: 32c4b20e23f51bb4684817dae6fde9dd, type: 3}
+    spawnWeight: 25
+  - apartment: {fileID: 1198082646049516076, guid: af0f34858e174fb4ea7be5957dfbfb99, type: 3}
+    spawnWeight: 5
+  - apartment: {fileID: 6563516355638402695, guid: c7c3515bd74e1f7489f22645b6a5af2d, type: 3}
+    spawnWeight: 25
   spawnPoint: {fileID: 906909211}
   spawnArea: {x: 8, y: 8}
 --- !u!1 &1418053690
@@ -3902,7 +3936,7 @@ MonoBehaviour:
     rgba: 4294960354
   residentLockedColor:
     serializedVersion: 2
-    rgba: 4286216826
+    rgba: 4289901234
   residentUnlockedColor:
     serializedVersion: 2
     rgba: 3003121663

@@ -34,30 +34,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump"))
         {
-            if (gameState == GameState.PlacingApartments)
-            {
-                if (!BuildingManager.instance.AllApartmentsPlacedInZone())
-                {
-                    WarningManager.instance.PlaceAllApartmentsWarning();
-                }
-                else if (!BuildingManager.instance.apartmentGrid.AllApartmentBlocksTouching())
-                {
-                    WarningManager.instance.AllApartmentTouchingWarning();
-                }
-                else if (!BuildingManager.instance.ApartmentIsOnTheGround())
-                {
-                    WarningManager.instance.ApartmentTouchingGroundWarning();
-                }
-                else
-                {
-                    EndApartmentPhase();
-                }
-            }
-            else if (gameState == GameState.ReadyToStartNextRound)
-            {
-                StartRound();
-            }
-
+            ProgressRound();
         }
     }
 
@@ -79,5 +56,50 @@ public class GameManager : MonoBehaviour
         BuildingManager.instance.SpawnApartments(5);
         ResidentManager.instance.SpawnResidents(5);
         gameState = GameState.PlacingApartments;
+    }
+
+    //Rounds consist of three phases
+    //Placing Apartments
+    //Placing Residents
+    //Upkeep
+    internal void ProgressRound() 
+    {
+
+        if (gameState == GameState.PlacingApartments)
+        {
+            if (!BuildingManager.instance.AllApartmentsPlacedInZone())
+            {
+                WarningManager.instance.PlaceAllApartmentsWarning();
+            }
+            else if (!BuildingManager.instance.apartmentGrid.AllApartmentBlocksTouching())
+            {
+                WarningManager.instance.AllApartmentTouchingWarning();
+            }
+            else if (!BuildingManager.instance.ApartmentIsOnTheGround())
+            {
+                WarningManager.instance.ApartmentTouchingGroundWarning();
+            }
+            else
+            {
+                EndApartmentPhase();
+            }
+        }
+        else if (gameState == GameState.PlacingResidents) 
+        {
+            if (!ResidentManager.instance.AllResidentsAreInBuildings())
+            {
+                WarningManager.instance.FlashGenericWarning("Must Place All Residents!!!");
+            }
+            else 
+            {
+                EndRound();
+                StartRound();
+            }
+        }
+        else if (gameState == GameState.ReadyToStartNextRound)
+        {
+            StartRound();
+        }
+
     }
 }

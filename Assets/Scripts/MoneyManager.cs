@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
+
 public class MoneyManager : MonoBehaviour
 {
     public TextMeshProUGUI moneyBanked;
@@ -19,7 +21,15 @@ public class MoneyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        UpdateMoneyPerRound();
+    }
+
+    private void UpdateMoneyPerRound()
+    {
+        moneyPerRound = 0;
+        moneyPerRound = -BuildingManager.instance.GetApartmentPrice();
+        moneyPerRound += ResidentManager.instance.GetResidentRent();
+        SetMoneyPerRound(moneyPerRound);
     }
 
     public void SetMoneyPerRound(int amount) 

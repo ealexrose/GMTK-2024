@@ -25,12 +25,24 @@ public class ResidentManager : MonoBehaviour
         }
     }
 
-    public bool IsSpaceOccupiedByResident(Vector2Int coordinates, Resident exclusion = null) 
+
+
+
+    #region Validation
+    public bool IsSpaceOccupiedByResident(Vector2Int coordinates, Resident exclusion = null)
     {
         ResidentController residentAtLocation = residentControllers.Find(x => x.resident != exclusion && x.resident.gridCoordinates == coordinates);
         return residentAtLocation != null;
     }
 
+    internal void RegisterResident(ResidentController resident)
+    {
+        residentControllers.Add(resident);
+    }
+    #endregion
+
+
+    #region Round Helpers
     internal void LockAllResidentsInPlace()
     {
         foreach (ResidentController residentController in residentControllers)
@@ -39,16 +51,18 @@ public class ResidentManager : MonoBehaviour
         }
     }
 
-    internal void RegisterResident(ResidentController resident)
-    {
-        residentControllers.Add(resident);
-    }
-
-    internal bool AllResidentsAreInBuildings() 
+    internal bool AllResidentsAreInBuildings()
     {
         return residentControllers.All(residentControler => residentControler.resident.homeApartment != null && residentControler.resident.homeApartment.IsInPlacementZone);
     }
 
+    internal void UnlockResidents()
+    {
+        residentControllers.Where(res => res.residentState == ResidentController.ResidentState.WaitingForUnlock).ToList().ForEach(res => res.Unlock());
+    }
+    #endregion
+
+    #region Resident Spawning
     private ResidentSpawnable GetRandomResident()
     {
         float maxWeight = residentPrefabs.Sum(x => x.spawnWeight);
@@ -67,12 +81,7 @@ public class ResidentManager : MonoBehaviour
         return residentPrefabs[0];
     }
 
-    internal void UnlockResidents()
-    {
-        residentControllers.Where(res => res.residentState == ResidentController.ResidentState.WaitingForUnlock).ToList().ForEach(res => res.Unlock());
-    }
-
-    private List<ResidentSpawnable> GetRandomResidents(int spawnCount) 
+    private List<ResidentSpawnable> GetRandomResidents(int spawnCount)
     {
         List<ResidentSpawnable> spawnables = new List<ResidentSpawnable>();
 
@@ -83,7 +92,7 @@ public class ResidentManager : MonoBehaviour
         return spawnables;
     }
 
-    internal void SpawnResidents(int count) 
+    internal void SpawnResidents(int count)
     {
 
         List<ResidentSpawnable> residentsToSpawn = GetRandomResidents(count);
@@ -96,4 +105,81 @@ public class ResidentManager : MonoBehaviour
             i += 1;
         }
     }
+    #endregion
+
+    #region Resident Happiness
+
+    //Overload that lets you check if the resident of an apartment is happy
+    public bool IsResidentHappy(Apartment apartment)
+    {
+        return IsResidentHappy(apartment.resident);
+    }
+
+    private bool IsResidentHappy(Resident resident, Apartment apartment = null)
+    {
+        if (apartment == null)
+            apartment = resident.homeApartment;
+        List<Resident> neighbors = BuildingManager.instance.apartmentGrid.GetAllNeighboringResidents(apartment);
+
+
+        switch (resident.residentType)
+        {
+            case Resident.ResidentType.AtLeastOneNeighborSharesType:
+                return neighbors.Any(nb => nb.residentType == Resident.ResidentType.AtLeastOneNeighborSharesType);
+            case Resident.ResidentType.NoNeighborsOfThisType:
+                return !neighbors.Any(nb => nb.residentType == Resident.ResidentType.NoNeighborsOfThisType);                
+            case Resident.ResidentType.AllNeighborsUnique:
+                return neighbors.Distinct().Count() == neighbors.Count();                
+            case Resident.ResidentType.AllNeighborsAreAlike:
+                return !(neighbors.Distinct().Count() > 1);
+            case Resident.ResidentType.RequiresOpenSpace:
+                return apartment.CountNeighboringSpaces() <= BuildingManager.instance.apartmentGrid.GetNeighboringApartmentBlocks(apartment).Count(block => block == null) * 2;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    //Check each residents conditions and updates their happiness based on if they meet their happiness criteria
+    //If a resident is not in an apartment, set them to a neutral 'homeless' state
+    public void UpdateResidentHappiness() 
+    {
+        foreach (ResidentController residentController in residentControllers) 
+        {
+            if (residentController.resident.homeApartment == null)
+                residentController.UpdateMood(Resident.ResidentMood.Homeless);
+            else if (IsResidentHappy(residentController.resident))
+                residentController.UpdateMood(Resident.ResidentMood.Happy);
+            else
+                residentController.UpdateMood(Resident.ResidentMood.Mad);
+        }
+    }
+
+    public int ResidentValue(Resident resident) 
+    {
+        if (resident.residentMood == Resident.ResidentMood.Homeless)
+            return 0;
+        if (resident.residentMood == Resident.ResidentMood.Happy)
+            return resident.moneyMultiplier * BuildingManager.instance.basePrice *  resident.homeApartment.apartmentBlocks.Count();
+        if (resident.residentMood == Resident.ResidentMood.Mad)
+            return -resident.moneyMultiplier * BuildingManager.instance.basePrice * resident.homeApartment.apartmentBlocks.Count();
+
+        return 0;
+    }
+
+    public int ResidentValue(ResidentController residentController) 
+    {
+        return ResidentValue(residentController.resident);
+    }
+
+    internal int GetResidentRent()
+    {
+        int rent = 0;
+        foreach (ResidentController residentController in residentControllers) 
+        {
+            rent += ResidentValue(residentController);
+        }
+        return rent;
+    }
+    #endregion
 }

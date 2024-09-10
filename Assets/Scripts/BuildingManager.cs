@@ -56,8 +56,8 @@ public class BuildingManager : MonoBehaviour
     internal void MoveApartment(Apartment apartment, Vector2Int newPosition)
     {
         apartmentGrid.MoveApartment(apartment, newPosition);
-        Debug.Log("Are apartments all placed? " + AreApartmentsAllPlacedInValidPositions());
-
+        // Debug.Log("Are apartments all placed? " + AreApartmentsAllPlacedInValidPositions());
+        Debug.Log(apartmentGrid.GetNeighboringApartmentBlocks(apartment).Count(block => block == null));
     }
 
     #endregion

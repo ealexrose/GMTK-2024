@@ -13,13 +13,23 @@ public class Resident
     [System.Flags]
     public enum ResidentType 
     {        
-        Social = 0 << 1,
-        Loud = 0 << 2,
-        Territorial = 0 << 3,
-        Irritable = 0 << 4,
+        AtLeastOneNeighborSharesType = 1,
+        NoNeighborsOfThisType = 2,
+        AllNeighborsUnique = 4,
+        RequiresOpenSpace = 8,
+        AllNeighborsAreAlike = 16,
     }
 
     public ResidentType residentType;
+
+    public enum ResidentMood 
+    {
+        Homeless,
+        Happy,
+        Mad,
+        Annoyed
+    }
+    public ResidentMood residentMood = ResidentMood.Homeless;
     public Vector2Int gridCoordinates;
     public int colorNumber;
     public int moneyMultiplier;

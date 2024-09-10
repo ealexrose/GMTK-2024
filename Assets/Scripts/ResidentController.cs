@@ -9,6 +9,7 @@ public class ResidentController : MonoBehaviour, IClickable
     public bool debugMessages;
 
     public Resident resident;
+    
     public enum ResidentState
     {
         WaitingForUnlock,
@@ -104,6 +105,7 @@ public class ResidentController : MonoBehaviour, IClickable
             resident.gridCoordinates = LocalGridPosition;
         }
 
+        ResidentManager.instance.UpdateResidentHappiness();
         PlaceBehind();
         Debug.Log("All Residents in Apartments? " + ResidentManager.instance.AllResidentsAreInBuildings());
     }
@@ -203,5 +205,11 @@ public class ResidentController : MonoBehaviour, IClickable
     public bool ClickRelease()
     {
         return true;
+    }
+
+    internal void UpdateMood(Resident.ResidentMood newMood)
+    {
+        resident.residentMood = newMood;
+        //TODO Update Visuals
     }
 }
