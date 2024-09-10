@@ -11,11 +11,21 @@ public class MoneyManager : MonoBehaviour
     public TextMeshProUGUI moneyPerRoundLabel;
     public int money;
     public int moneyPerRound;
+
+    public static MoneyManager instance;
     // Start is called before the first frame update
     void Start()
     {
-        SetMoney(100);
+        SetMoney(1000);
         SetMoneyPerRound(250);
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
     }
 
     // Update is called once per frame
@@ -63,5 +73,11 @@ public class MoneyManager : MonoBehaviour
         }
 
         moneyBanked.text = prefix + amount.ToString();
+        money = amount;
+    }
+
+    public void ApplyMoneyChanges() 
+    {
+        SetMoney(money + moneyPerRound);
     }
 }

@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
     {
         PlacingApartments,
         PlacingResidents,
-        ReadyToStartNextRound
+        ReadyToStartNextRound,
+        GameOver
     }
     public GameState gameState;
 
@@ -49,8 +50,23 @@ public class GameManager : MonoBehaviour
     {
         BuildingManager.instance.LockAllBuildingsInPlace();
         ResidentManager.instance.LockAllResidentsInPlace();
-        gameState = GameState.ReadyToStartNextRound;
+        MoneyManager.instance.ApplyMoneyChanges();
+        if (MoneyManager.instance.money < 0) 
+        {
+            LoseGame();
+        }
+        else 
+        {
+            gameState = GameState.ReadyToStartNextRound;
+        }
     }
+
+    private void LoseGame()
+    {
+        LoseScreenManager.instance.ShowLoseScreen();
+        gameState = GameState.GameOver;
+    }
+
     private void StartRound()
     {
         BuildingManager.instance.SpawnApartments(5);
